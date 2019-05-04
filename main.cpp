@@ -5,11 +5,11 @@
 #define bigdiff(x) ((x) < 50 &&(x) > -50)
 
 int main(int argc,char** argv) {
-    int x,y,flag(0);
+    int x(0),y(0);
     std::string video = "1.mp4";
     if(argc != 1)
         video = argv[1];
-    std::cout << "Hello, World!" << std::endl;
+    //std::cout << "Hello, World!" << std::endl;
     cv::VideoCapture capture;
     capture.open(video);
     if(!capture.isOpened())
@@ -55,7 +55,7 @@ int main(int argc,char** argv) {
         int l = contours1.size();
         int c(0);
         if(l % 2 == 0)
-            for(int i=0;i<contours1.size();i++)
+            for(int i=0;i<l;i++)
             {
                 c++;
                 mx += mc[i].x;
@@ -63,20 +63,29 @@ int main(int argc,char** argv) {
             }
         else
         {
-            for(int i=0;i<contours1.size();i+=2)
+            for(int i=0;i<l;i+=2)
             {
                 c++;
                 mx += mc[i].x;
                 my += mc[i].y;
             }
         }
-        int mxc = mx/c,myc = my/c;
-        std::cout<<x-mxc<<" "<<bigdiff(x-mxc)<<" "<<y-myc<<" "<<bigdiff(y-myc)<<std::endl;
-        if(flag == 0)
+        int mxc,myc;
+        if(c != 0)
         {
-            x = mx/c;
-            y = my/c;
-            flag = 1;
+            mxc = mx/c;
+            myc = my/c;
+        }
+        else
+        {
+            mxc = x;
+            myc = y;
+        }
+        //std::cout<<x-mxc<<" "<<bigdiff(x-mxc)<<" "<<y-myc<<" "<<bigdiff(y-myc)<<std::endl;
+        if(x == 0 && y == 0)
+        {
+            x = mxc;
+            y = myc;
         }
         else if((bigdiff(x-mxc) && bigdiff(y-myc))) {
             x = mxc;
@@ -123,8 +132,8 @@ int main(int argc,char** argv) {
         }*/
         cv::circle(frame,cv::Point(x,y),3.0,cv::Scalar(0,0,255),3,cv::LINE_AA);
         cv::imshow("test",frame);
-        cv::waitKey();
-        //if(cv::waitKey(33) == 27) break;
+        //cv::waitKey();
+        if(cv::waitKey(33) == 27) break;
     }
 
     return 0;
